@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRIME AI - Final App</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+body{background:#000;color:#fff;padding:16px;padding-bottom:90px}
+.top{display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:900;font-size:22px;letter-spacing:2px}.logo span{color:#BDBDBD;font-weight:300}
+.badge{background:#fff;color:#000;padding:5px 10px;border-radius:20px;font-size:11px;font-weight:800}
+.page{display:none}.page.active{display:block}
+h1{font-size:28px;margin:14px 0 4px}.sub{color:#BDBDBD;font-size:13px}
+.box{background:#101010;border:1px solid #222;border-radius:16px;padding:14px;margin-top:14px}
+textarea,input,select{width:100%;background:#000;color:#fff;border:1px solid #333;border-radius:10px;padding:11px;margin-top:8px}
+.cams{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.cam{background:#1a1a1a;border:1px solid #333;padding:8px 12px;border-radius:20px;font-size:12px}
+.cam.active{background:#fff;color:#000;font-weight:700}
+.btn{width:100%;background:#fff;color:#000;border:none;padding:15px;border-radius:12px;font-weight:900;margin-top:12px}
+.btn2{width:100%;background:#101010;color:#fff;border:1px solid #333;padding:12px;border-radius:12px;font-weight:700;margin-top:8px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#101010;border-top:1px solid #222;display:flex;padding:10px 0;padding-bottom:20px}
+.nav div{flex:1;text-align:center;font-size:11px;color:#BDBDBD;cursor:pointer}
+.nav div.active{color:#fff;font-weight:800}
+.nav div span{font-size:22px;display:block}
+.stat{background:#1a1a1a;border:1px solid #222;border-radius:14px;padding:12px}
+.char{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #222}
+.face{width:44px;height:44px;background:#333;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px}
+</style>
+</head>
+<body>
+<div class="top"><div class="logo">PRIME<span> AI</span></div><div class="badge">PRO • GHANA</div></div>
+
+<div id="p-home" class="page active">
+<h1>Create Cinematic<br>AI Video.</h1><p class="sub">Vidu Q2 • Higgsfield Camera • Character DNA</p>
+<div class="box"><label style="font-size:11px;color:#BDBDBD">DESCRIBE YOUR SCENE</label><textarea>A beautiful Ghanaian lady in Makola Market, golden hour, wearing kente, cinematic</textarea>
+<label style="font-size:11px;color:#BDBDBD;display:block;margin-top:10px">🎥 CAMERA</label><div class="cams"><div class="cam active">Dolly In</div><div class="cam">Crash Zoom</div><div class="cam">360 Orbit</div><div class="cam">FPV Drone</div><div class="cam">Whip Pan</div></div>
+<label style="font-size:11px;color:#BDBDBD;display:block;margin-top:10px">🎙️ VOICE</label><div class="cams"><div class="cam active">English</div><div class="cam">Twi</div><div class="cam">Ga</div><div class="cam">Pidgin</div></div>
+<button class="btn" onclick="alert('Generating with Vidu Q2 + Claude Sonnet 5.5...')">✨ GENERATE VIDEO - 50 CREDITS</button></div>
+<div class="box"><h3>💳 PRICING - Pay with MoMo</h3><p style="font-size:13px;margin-top:6px">Free: 3/day • Starter GH₵60 • Pro GH₵150 • Studio GH₵300</p><button class="btn">UPGRADE TO PRO →</button></div>
+</div>
+
+<div id="p-dna" class="page">
+<h1>Character DNA</h1><p class="sub">Save once. Use in 100 videos.</p>
+<div class="box"><h3>✨ NEW CHARACTER</h3><input placeholder="Name - e.g. Ama Makola Queen"><input placeholder="Voice - Twi / English"><button class="btn">SAVE CHARACTER DNA →</button></div>
+<div class="box"><h3>👤 YOUR CHARACTERS</h3>
+<div class="char"><div class="face">👩🏾</div><div style="flex:1"><b>Ama - Makola Queen</b><p style="font-size:11px;color:#BDBDBD">24 videos • Twi</p></div><b style="color:#34c759;font-size:11px">98% Match</b></div>
+<div class="char"><div class="face">👨🏾</div><div style="flex:1"><b>Kwame - UENR Farmer</b><p style="font-size:11px;color:#BDBDBD">11 videos • English</p></div><b style="color:#34c759;font-size:11px">96% Match</b></div>
+</div>
+</div>
+
+<div id="p-admin" class="page">
+<h1>Admin Panel</h1><p class="sub">Onward Motion • onwardmotion4@gmail.com</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
+<div class="stat"><b style="font-size:20px">GH₵ 4,820</b><p style="font-size:11px;color:#BDBDBD">TOTAL REVENUE</p></div>
+<div class="stat"><b style="font-size:20px">1,247</b><p style="font-size:11px;color:#BDBDBD">USERS</p></div>
+<div class="stat"><b style="font-size:20px">8,932</b><p style="font-size:11px;color:#BDBDBD">VIDEOS</p></div>
+<div class="stat"><b style="font-size:20px">342</b><p style="font-size:11px;color:#BDBDBD">PRO USERS</p></div>
+</div>
+<div class="box"><h3>💳 CHANGE PRICING</h3><input value="Starter: GH₵ 60"><input value="Pro: GH₵ 150"><input value="Studio: GH₵ 300"><button class="btn">SAVE PRICING</button></div>
+<div class="box"><h3>🎁 PROMO: PRIME100 - 234 used</h3><button class="btn2">CREATE NEW CODE</button></div>
+</div>
+
+<div class="nav">
+<div class="active" onclick="show('home',this)"><span>🏠</span>Home</div>
+<div onclick="show('dna',this)"><span>🧬</span>DNA</div>
+<div onclick="show('admin',this)"><span>👑</span>Admin</div>
+</div>
+
+<script>
+function show(p,el){
+document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+document.getElementById('p-'+p).classList.add('active');
+document.querySelectorAll('.nav div').forEach(x=>x.classList.remove('active'));
+el.classList.add('active');
+}
+</script>
+</body>
+</html>
