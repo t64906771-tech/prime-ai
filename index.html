@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PRIME AI - Omni</title>
+<title>PRIME AI - V4 Omni</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
 body{background:#000;color:#fff;padding:16px;padding-bottom:60px}
@@ -44,8 +44,8 @@ label{font-size:13px;color:#aaa;display:block;margin:12px 0 6px}
 <body>
 
 <div id="authScreen" class="auth">
-  <h2>PRIME <span>AI</span></h2>
-  <p>Gemini Omni Video • Built in Accra</p>
+  <h2>PRIME <span>AI</span> - V4</h2>
+  <p>Gemini Omni • Interactions API • If you don't see V4, file didn't update</p>
   <div class="card">
     <h3 id="authTitle">Login to PRIME AI</h3>
     <label>Name (for Signup)</label>
@@ -62,22 +62,19 @@ label{font-size:13px;color:#aaa;display:block;margin:12px 0 6px}
 
 <div id="appScreen" class="hidden">
   <div class="header">
-    <h1>PRIME <span>AI</span></h1>
+    <h1>PRIME <span>AI</span> - V4</h1>
     <p>Gemini Omni 1.1 Flash • Interactions API</p>
-    <div class="badge">Status: <b>Ready</b> • prime-ai-mu.vercel.app</div>
+    <div class="badge">Status: <b>V4 - OMNI INTERACTIONS</b> • prime-ai-mu.vercel.app</div>
   </div>
   <div class="topbar">
     <span>👋 Hi, <b id="userName">User</b><br><span id="userEmail" style="color:#888;font-size:11px"></span></span>
     <button onclick="logout()">Logout</button>
   </div>
   <div class="note">
-    <b>How this works:</b><br>
-    1. Upload your photo<br>
-    2. Write what you want<br>
-    3. Omni invents movement from prompt. Uses Interactions API, not Veo.
+    <b>V4 Fix:</b> No more predictLongRunning. Uses POST /v1beta/interactions with input as text. If you still see predictLongRunning error, you are on old V3 file.
   </div>
   <div class="card">
-    <h3>1. Your Photo (First Frame)</h3>
+    <h3>1. Your Photo (Reference - shown for now, Omni uses prompt)</h3>
     <label class="upload">Tap to upload photo<br><span>Choose Image</span><input type="file" id="photo" accept="image/*" onchange="showPreview(this)"></label>
     <img id="photoPrev" class="preview">
   </div>
@@ -95,8 +92,9 @@ label{font-size:13px;color:#aaa;display:block;margin:12px 0 6px}
       <option value="16:9">16:9 - Landscape (YouTube)</option>
     </select>
   </div>
-  <button class="gen" id="genBtn" onclick="generate()">🚀 GENERATE WITH OMNI</button>
-  <div id="status">Ready. Upload photo, write prompt, tap GENERATE.<br>Keep Safari open 1-2 mins.</div>
+  <button class="gen" id="genBtn" onclick="generate()">🚀 GENERATE WITH OMNI - V4</button>
+  <button class="gen2" onclick="testKey()">🔍 TEST MY KEY - Show What Models I Can Use</button>
+  <div id="status">Ready. V4 loaded. Upload photo, write prompt, tap GENERATE.</div>
   <div class="card" style="margin-top:12px">
     <h3>📜 Your History</h3>
     <div id="history">No videos yet.</div>
@@ -104,11 +102,11 @@ label{font-size:13px;color:#aaa;display:block;margin:12px 0 6px}
   </div>
   <div class="card">
     <h3>🔑 API Key</h3>
-    <p style="font-size:12px;color:#888;line-height:1.5">Saved only on your phone. Omni needs PAID tier, no free tier.</p>
+    <p style="font-size:12px;color:#888;line-height:1.5">Saved only on your phone. Omni needs PAID tier.</p>
     <button class="gen2" onclick="changeKey()">Change / Re-enter API Key</button>
     <button class="gen2" onclick="clearKey()">Remove API Key</button>
   </div>
-  <div class="small">PRIME AI • Gemini Omni 1.1 Flash via Interactions API<br>Tip: "fast Azonto footwork, arms swinging, shoulder bounce"</div>
+  <div class="small">PRIME AI V4 • Gemini Omni 1.1 Flash via Interactions API</div>
 </div>
 
 <script>
@@ -157,13 +155,9 @@ function doAuth(){
   }
 }
 function logout(){localStorage.removeItem('prime_user');checkLogin();}
-let photoBase64=null;
 function showPreview(input){
   const f=input.files[0]; if(!f) return;
   const el=document.getElementById('photoPrev'); el.src=URL.createObjectURL(f); el.style.display='block';
-  const reader=new FileReader();
-  reader.onload=function(e){ photoBase64=e.target.result.split(',')[1]; };
-  reader.readAsDataURL(f);
 }
 function setPrompt(t){
   const p=document.getElementById('prompt');
@@ -191,6 +185,19 @@ function changeKey(){
 }
 function clearKey(){localStorage.removeItem('prime_veo_key');API_KEY='';alert('Key removed');}
 
+async function testKey(){
+  if(!API_KEY){ API_KEY=prompt('Paste your API Key:'); if(!API_KEY) return; localStorage.setItem('prime_veo_key',API_KEY); }
+  const status=document.getElementById('status');
+  status.innerText='Testing key... Listing models Google allows for your key...';
+  try{
+    const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${API_KEY}`);
+    const d=await r.json();
+    if(d.error) throw new Error(d.error.message);
+    const names=(d.models||[]).map(m=>m.name.replace('models/','')).filter(n=>n.includes('omni')||n.includes('veo')||n.includes('gemini')).join(', ');
+    status.innerText='Your key can see: '+(names||'No omni/veo models found - billing may be off. Full list: '+JSON.stringify(d).slice(0,500));
+  }catch(e){ status.innerText='Test Error: '+e.message; }
+}
+
 async function generate(){
   if(!API_KEY){
     API_KEY=prompt('Paste your Google AI Studio API Key (saved only on your phone):');
@@ -202,19 +209,14 @@ async function generate(){
   const status=document.getElementById('status');
   const btn=document.getElementById('genBtn');
   btn.disabled=true;
-  status.innerText='⏳ PRIME + Omni is generating via Interactions API... Keep tab open, 1-2 mins';
+  status.innerText='⏳ V4 - Sending to POST /v1beta/interactions ... Keep tab open';
   try{
-    // Build input: text + optional photo
-    let inputParts=[{type:'text', text: promptText}];
-    if(photoBase64){
-      inputParts.push({type:'image', image: photoBase64});
-    }
     const startRes=await fetch(`https://generativelanguage.googleapis.com/v1beta/interactions?key=${API_KEY}`,{
       method:'POST',
       headers:{'Content-Type':'application/json','x-goog-api-key':API_KEY},
       body:JSON.stringify({
         model:'gemini-omni-1.1-flash',
-        input: inputParts,
+        input: promptText,
         background:false,
         store:true,
         stream:false,
@@ -222,61 +224,39 @@ async function generate(){
       })
     });
     const startData=await startRes.json();
-    if(startData.error) throw new Error(startData.error.message || JSON.stringify(startData).slice(0,400));
-    // Get interaction id - different fields depending on response
+    if(startData.error) throw new Error('Google says: '+(startData.error.message||JSON.stringify(startData).slice(0,500)));
     let interactionId=startData.id || startData.interaction_id || startData.interaction?.id;
     if(!interactionId){
-      // Some responses return completed video immediately
-      let directUrl = startData.output_video?.uri || startData.output_video?.data || startData.steps?.[0]?.output_video?.uri;
+      let directUrl=startData.output_video?.uri || startData.output?.video?.uri;
       if(directUrl){
-        status.innerHTML=`✅ DONE!<br><br><a href="${directUrl}" target="_blank">▶️ Watch Your PRIME Video</a>`;
-        saveHistory(promptText,directUrl);
-        btn.disabled=false; return;
+        status.innerHTML=`✅ DONE!<br><br><a href="${directUrl}" target="_blank">▶️ Watch Video</a>`;
+        saveHistory(promptText,directUrl); btn.disabled=false; return;
       }
-      throw new Error('No interaction ID: '+JSON.stringify(startData).slice(0,400));
+      throw new Error('No interaction ID. Google returned: '+JSON.stringify(startData).slice(0,500));
     }
-    // Poll interaction
     for(let i=0;i<24;i++){
       await new Promise(r=>setTimeout(r,10000));
-      status.innerText=`⏳ Omni is rendering... ${(i+1)*10}s - Don't close Safari - ID: ${interactionId.slice(0,12)}`;
-      const pollRes=await fetch(`https://generativelanguage.googleapis.com/v1beta/interactions/${interactionId}?key=${API_KEY}`,{
-        headers:{'x-goog-api-key':API_KEY}
-      });
+      status.innerText=`⏳ Omni rendering... ${(i+1)*10}s - ID ${interactionId.slice(0,10)} - Don't close Safari`;
+      const pollRes=await fetch(`https://generativelanguage.googleapis.com/v1beta/interactions/${interactionId}?key=${API_KEY}`,{headers:{'x-goog-api-key':API_KEY}});
       const pollData=await pollRes.json();
-      if(pollData.error) throw new Error(pollData.error.message || JSON.stringify(pollData).slice(0,400));
+      if(pollData.error) throw new Error(pollData.error.message||JSON.stringify(pollData).slice(0,500));
       let st=(pollData.status||pollData.state||'').toLowerCase();
-      let videoUri = pollData.output_video?.uri || pollData.output_video?.data || pollData.output?.video?.uri;
-      // Check steps for video
+      let videoUri=pollData.output_video?.uri || pollData.output?.video?.uri || pollData.video?.uri;
       if(!videoUri && pollData.steps){
-        for(let s of pollData.steps){
-          if(s.output_video?.uri) videoUri=s.output_video.uri;
-          if(s.output?.video?.uri) videoUri=s.output.video.uri;
-          if(s.video?.uri) videoUri=s.video.uri;
-        }
+        for(let s of pollData.steps){ if(s.output_video?.uri) videoUri=s.output_video.uri; if(s.output?.video?.uri) videoUri=s.output.video.uri; }
       }
-      if(st==='completed' || st==='succeeded' || st==='complete' || videoUri){
-        if(videoUri){
-          let watchUrl=videoUri;
-          if(videoUri.startsWith('data:')){
-            status.innerHTML=`✅ DONE! Video is ready but too big to link. Check History for data.`;
-            saveHistory(promptText,watchUrl);
-          } else {
-            if(!watchUrl.includes('key=')) watchUrl=watchUrl+`&key=${API_KEY}`;
-            status.innerHTML=`✅ DONE!<br><br><a href="${watchUrl}" target="_blank">▶️ Watch Your PRIME Video</a><br><br>Tap to open, then Share > Save to Files.`;
-            saveHistory(promptText,watchUrl);
-          }
-          btn.disabled=false; return;
-        }
-        if(st.includes('complete')||st.includes('succeed')){
-          status.innerText='Done but no video URL in response: '+JSON.stringify(pollData).slice(0,300);
-          btn.disabled=false; return;
-        }
+      if(videoUri){
+        let watchUrl=videoUri;
+        if(!watchUrl.includes('key=')) watchUrl=watchUrl+`&key=${API_KEY}`;
+        status.innerHTML=`✅ DONE!<br><br><a href="${watchUrl}" target="_blank">▶️ Watch Your PRIME Video</a><br><br>Tap to open, then Share > Save to Files.`;
+        saveHistory(promptText,watchUrl); btn.disabled=false; return;
       }
-      if(st==='failed' || st==='error'){
-        throw new Error('Generation failed: '+JSON.stringify(pollData).slice(0,400));
+      if(st==='failed'||st==='error') throw new Error('Failed: '+JSON.stringify(pollData).slice(0,500));
+      if(st==='completed'||st==='succeeded'){
+        status.innerText='Completed but no video URL: '+JSON.stringify(pollData).slice(0,500); btn.disabled=false; return;
       }
     }
-    status.innerText='Still rendering... Wait 1 min and tap Generate again. ID: '+interactionId; btn.disabled=false;
+    status.innerText='Still rendering... ID: '+interactionId; btn.disabled=false;
   }catch(e){status.innerText='Error: '+e.message;btn.disabled=false;}
 }
 checkLogin();
