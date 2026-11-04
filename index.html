@@ -1,79 +1,143 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PRIME AI - Genjutsu</title>
 <style>
-body{background:#0a0a0a;color:white;font-family:sans-serif;margin:0}
-header{padding:15px;display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:22px;font-weight:900} .logo span{color:#a3ff00}
-.btn{background:#a3ff00;color:black;border:none;padding:10px 18px;border-radius:20px;font-weight:800}
-.banner{background:linear-gradient(90deg,#1a1a1a,#2a2a00);margin:15px;padding:20px;border-radius:15px}
-.tabs{display:flex;gap:10px;margin:15px}
-.tab{padding:10px 16px;border-radius:20px;background:#222;border:1px solid #333;cursor:pointer}
-.tab.active{background:#a3ff00;color:black}
-.card{background:#151515;margin:15px;padding:15px;border-radius:15px}
-input{width:100%;padding:12px;margin:8px 0;border-radius:10px;background:#222;border:1px solid #333;color:white}
-.upload{border:2px dashed #444;padding:20px;text-align:center;border-radius:12px;margin:10px 0}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:15px}
-.grid img{width:100%;border-radius:12px}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+body{background:#000;color:#fff;padding:16px;padding-bottom:60px}
+.header{text-align:center;padding:20px 0 10px}
+.header h1{font-size:32px;letter-spacing:2px}
+.header h1 span{color:#a3ff00}
+.header p{color:#888;font-size:13px;margin-top:4px}
+.badge{display:inline-block;background:#1a1a1a;border:1px solid #333;padding:6px 12px;border-radius:20px;font-size:12px;margin-top:10px}
+.badge b{color:#a3ff00}
+.tabs{display:flex;gap:8px;margin:20px 0}
+.tabs button{flex:1;padding:12px;border-radius:12px;border:1px solid #333;background:#111;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+.tabs button.active{background:#a3ff00;color:#000;border-color:#a3ff00}
+.card{background:#111;border:1px solid #222;border-radius:16px;padding:16px;margin-bottom:12px}
+.card h3{font-size:14px;margin-bottom:10px}
+.upload{border:2px dashed #333;border-radius:12px;padding:20px;text-align:center;color:#888;font-size:13px;cursor:pointer}
+.upload input{display:none}
+.upload span{color:#a3ff00;font-weight:700}
+.preview{width:100%;border-radius:12px;margin-top:10px;display:none;max-height:220px;object-fit:cover}
+textarea{width:100%;background:#000;border:1px solid #333;color:#fff;border-radius:12px;padding:12px;font-size:14px;min-height:70px;outline:none;resize:none}
+.gen{width:100%;background:#a3ff00;color:#000;border:none;padding:16px;border-radius:14px;font-size:16px;font-weight:800;cursor:pointer;margin-top:4px}
+.gen:disabled{opacity:0.6}
+#status{background:#111;border:1px solid #222;border-radius:12px;padding:14px;font-size:13px;line-height:1.6;margin-top:14px;min-height:50px;word-break:break-word}
+#status a{color:#a3ff00;font-weight:700}
+.small{font-size:11px;color:#666;text-align:center;margin-top:10px;line-height:1.5}
 </style>
 </head>
 <body>
 
-<header>
-<div class="logo">PRIME<span> AI</span></div>
-<button class="btn">Upgrade</button>
-</header>
-
-<div class="banner">
-<h2>GENJUTSU</h2>
-<p>Transfer motion to your characters or objects while keeping the rest unchanged.</p>
-<button class="btn" onclick="document.getElementById('studio').scrollIntoView()">Start generating →</button>
+<div class="header">
+  <h1>PRIME <span>AI</span></h1>
+  <p>Genjutsu • Motion Transfer • Outfit Swap • Powered by Veo 3.1</p>
+  <div class="badge">Status: <b>Ready</b> • Domain: prime-ai-mu.vercel.app</div>
 </div>
 
 <div class="tabs">
-<div class="tab active" id="tabA" onclick="switchMode('A')">🔥 Motion Transfer</div>
-<div class="tab" id="tabB" onclick="switchMode('B')">👕 Outfit Swap</div>
+  <button id="tabMotion" class="active" onclick="setMode('motion')">⚡ Motion Transfer</button>
+  <button id="tabOutfit" onclick="setMode('outfit')">👕 Outfit Swap</button>
 </div>
 
-<div class="card" id="studio">
-<h3 id="title">A) Motion Transfer</h3>
-<p id="desc">Upload your photo + a motion video. PRIME puts the motion on your photo.</p>
-
-<div class="upload">📸 <b>1. Your Character Photo</b><br><input type="file" accept="image/*"></div>
-<div class="upload">🎬 <b>2. Motion Video</b><br><input type="file" accept="video/*"></div>
-
-<input type="text" id="prompt" placeholder="e.g. Make him dance Azonto in Accra, keep face same">
-<button class="btn" style="width:100%;padding:15px" onclick="generate()">✨ GENERATE PRIME VIDEO</button>
-<p id="status" style="text-align:center"></p>
+<div class="card">
+  <h3 id="label1">1. Your Photo (Character)</h3>
+  <label class="upload">Tap to upload photo<br><span>Choose Image</span><input type="file" id="photo" accept="image/*" onchange="showPreview(this,'photoPrev')"></label>
+  <img id="photoPrev" class="preview">
 </div>
 
-<div style="padding:0 15px"><h3>Community Trending</h3></div>
-<div class="grid">
-<img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400">
-<img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400">
-<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400">
-<img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400">
+<div class="card">
+  <h3 id="label2">2. Motion Video</h3>
+  <label class="upload">Tap to upload motion video<br><span>Choose Video</span><input type="file" id="video" accept="video/*" onchange="showPreview(this,'videoPrev')"></label>
+  <video id="videoPrev" class="preview" controls></video>
 </div>
+
+<div class="card">
+  <h3>3. Prompt</h3>
+  <textarea id="prompt">Make him dance Azonto in Accra, keep his face exactly the same, energetic, street style</textarea>
+</div>
+
+<button class="gen" id="genBtn" onclick="generate()">🚀 GENERATE PRIME VIDEO</button>
+
+<div id="status">Ready. Upload photo + video, then tap GENERATE.<br>Your API key is saved only on your phone, never shared.</div>
+
+<div class="small">PRIME AI • Built in Accra • Veo 3.1 via Google AI Studio<br>Tip: Keep Safari open while Veo renders (1-2 mins). If it asks for key, paste it once - it will remember it.</div>
 
 <script>
-let mode='A';
-function switchMode(m){
-  mode=m;
-  document.getElementById('tabA').classList.toggle('active',m==='A');
-  document.getElementById('tabB').classList.toggle('active',m==='B');
-  if(m==='A'){
-    document.getElementById('title').innerText='A) Motion Transfer';
-    document.getElementById('desc').innerText='Upload your photo + a motion video. PRIME puts the motion on your photo.';
+let mode = 'motion';
+function setMode(m){
+  mode = m;
+  document.getElementById('tabMotion').classList.toggle('active', m==='motion');
+  document.getElementById('tabOutfit').classList.toggle('active', m==='outfit');
+  if(m==='motion'){
+    document.getElementById('label2').innerText = '2. Motion Video';
+    document.getElementById('prompt').value = 'Make him dance Azonto in Accra, keep his face exactly the same, energetic, street style';
   } else {
-    document.getElementById('title').innerText='B) Outfit Background Swap';
-    document.getElementById('desc').innerText='Upload your photo + outfit photo. PRIME swaps outfit & background, keeps your face.';
+    document.getElementById('label2').innerText = '2. Outfit Photo';
+    document.getElementById('prompt').value = 'Keep his face exactly the same, wear this outfit, change background to Osu, Accra, cinematic';
   }
 }
-function generate(){
-  document.getElementById('status').innerText='⏳ PRIME is generating... (Demo mode - connect API next)';
-  setTimeout(()=>{ document.getElementById('status').innerText='✅ Done! This is your PRIME Genjutsu demo. Connect Higgsfield / Seedance API to make it real.' },2000);
+function showPreview(input, prevId){
+  const file = input.files[0];
+  if(!file) return;
+  const el = document.getElementById(prevId);
+  el.src = URL.createObjectURL(file);
+  el.style.display = 'block';
+}
+
+let API_KEY = localStorage.getItem('prime_veo_key') || '';
+
+async function generate(){
+  if(!API_KEY){
+    API_KEY = prompt('Paste your Google AI Studio API Key (saved only on your phone):');
+    if(!API_KEY) return;
+    localStorage.setItem('prime_veo_key', API_KEY);
+  }
+
+  const promptText = document.getElementById('prompt').value || 'Make him dance Azonto in Accra, keep face same';
+  const status = document.getElementById('status');
+  const btn = document.getElementById('genBtn');
+  btn.disabled = true;
+  status.innerText = '⏳ PRIME + Veo 3.1 is generating... Keep this tab open, 1-2 mins';
+
+  try {
+    const start = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/veo-3.1-generate-preview:predictLongRunning?key=${API_KEY}`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        instances: [{ prompt: promptText }],
+        parameters: { aspectRatio: "9:16", sampleCount: 1 }
+      })
+    });
+    const startData = await start.json();
+    if(!startData.name) throw new Error(JSON.stringify(startData).slice(0,300));
+
+    let opName = startData.name;
+    for(let i=0; i<20; i++){
+      await new Promise(r=>setTimeout(r,10000));
+      status.innerText = `⏳ Veo is rendering... ${(i+1)*10}s - Don't close Safari`;
+      const poll = await fetch(`https://generativelanguage.googleapis.com/v1beta/${opName}?key=${API_KEY}`);
+      const pollData = await poll.json();
+      if(pollData.done){
+        const videoUri = pollData.response?.generateVideoResponse?.generatedSamples?.[0]?.video?.uri;
+        if(videoUri){
+          status.innerHTML = `✅ DONE!<br><br><a href="${videoUri}&key=${API_KEY}" target="_blank">▶️ Watch Your PRIME Video</a><br><br>Tap to open, then Share > Save to Files to post it.`;
+        } else {
+          status.innerText = 'Done but no video returned. Try again.';
+        }
+        btn.disabled = false;
+        return;
+      }
+    }
+    status.innerText = 'Still rendering... Wait 1 min and tap Generate again';
+    btn.disabled = false;
+  } catch(e){
+    status.innerText = 'Error: ' + e.message + '\n\nIf error is about key, tap and hold this page > Clear key: ' + 'localStorage.removeItem("prime_veo_key"); location.reload();';
+    btn.disabled = false;
+  }
 }
 </script>
 </body>
