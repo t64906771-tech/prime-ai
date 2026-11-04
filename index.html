@@ -150,8 +150,8 @@ window.scrollTo(0,0);
 function setCam(el,v){cam=v;document.querySelectorAll('#camBox .pill').forEach(b=>b.classList.remove('active'));el.classList.add('active');}
 function setVoice(el,v){voice=v;document.querySelectorAll('#voiceBox .pill').forEach(b=>b.classList.remove('active'));el.classList.add('active');}
 function googleLogin(){
-localStorage.setItem('prime_user',JSON.stringify({name:'Google User',phone:'google@prime.ai',pass:'google1234'}));
-localStorage.setItem('prime_logged','1'); show('home');
+document.getElementById('authMsg').style.color='#FF6B6B';
+document.getElementById('authMsg').textContent='Google Login needs setup - use Email login for now.';
 }
 function doRegister(){
 let n=document.getElementById('regName').value.trim();
@@ -161,10 +161,15 @@ let m=document.getElementById('authMsg');
 if(!n||!p||!pw){m.textContent='Fill all fields';return;}
 if(pw.length<8){m.textContent='Password must be 8+ characters';return;}
 localStorage.setItem('prime_user',JSON.stringify({name:n,phone:p,pass:pw}));
-localStorage.setItem('prime_logged','1');
 localStorage.setItem('prime_credits','50');
 document.getElementById('creditBal').textContent='50';
-show('home');
+document.getElementById('regName').value='';
+document.getElementById('regPhone').value='';
+document.getElementById('regPass').value='';
+document.getElementById('logPhone').value=p;
+m.style.color='#4ade80';
+m.textContent='✅ Account created! Now LOGIN below with your password.';
+document.getElementById('logPass').focus();
 }
 function doLogin(){
 let p=document.getElementById('logPhone').value.trim();
@@ -189,7 +194,7 @@ document.getElementById('adminVideos').textContent=count;
 }
 function payMoMo(plan){
 let msg=encodeURIComponent('Hi PRIME AI, I want to pay for '+plan+' with MoMo. My email: ');
-window.open('https://wa.me/233550000000?text='+msg,'_blank');
+window.open('https://wa.me/233546439879?text='+msg,'_blank');
 }
 function saveDNA(){
 let n=document.getElementById('dnaName').value.trim();
