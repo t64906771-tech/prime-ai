@@ -28,7 +28,7 @@ textarea,input,select{width:100%;background:#000;color:#fff;border:1px solid #33
 .face{width:44px;height:44px;background:#333;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px}
 </style>
 </head>
-<body><div id="p-auth" class="page">
+<body><div id="p-auth" class="page active">
 <div class="box"><h2>👋 Welcome to PRIME AI</h2>
 <input id="regName" placeholder="Full Name" style="width:90%;padding:12px;margin:5px">
 <input id="regPhone" placeholder="Phone e.g 0546439879" style="width:90%;padding:12px;margin:5px">
@@ -60,7 +60,7 @@ if(u && u.pass===pw){localStorage.setItem('prime_logged',p);show('home');}
 else{document.getElementById('authMsg').innerText='Wrong phone or password';}
 }
 </script>
-<div id="p-home" class="page active">
+<div id="p-home" class="page">
 <h1>Create Cinematic<br>AI Video.</h1><p class="sub">Vidu Q2 • Higgsfield Camera • Character DNA</p>
 <div class="box"><label style="font-size:11px;color:#BDBDBD">DESCRIBE YOUR SCENE</label><textarea>A beautiful Ghanaian lady in Makola Market, golden hour, wearing kente, cinematic</textarea>
 <label style="font-size:11px;color:#BDBDBD;display:block;margin-top:10px">🎥 CAMERA</label><div class="cams"><div class="cam active">Dolly In</div><div class="cam">Crash Zoom</div><div class="cam">360 Orbit</div><div class="cam">FPV Drone</div><div class="cam">Whip Pan</div></div>
