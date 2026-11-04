@@ -3,115 +3,213 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PRIME AI - Final App</title>
+<title>PRIME AI - Cinematic AI Video</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
-body{background:#000;color:#fff;padding:16px;padding-bottom:90px}
-.top{display:flex;justify-content:space-between;align-items:center}
-.logo{font-weight:900;font-size:22px;letter-spacing:2px}.logo span{color:#BDBDBD;font-weight:300}
-.badge{background:#fff;color:#000;padding:5px 10px;border-radius:20px;font-size:11px;font-weight:800}
-.page{display:none}.page.active{display:block}
-h1{font-size:28px;margin:14px 0 4px}.sub{color:#BDBDBD;font-size:13px}
-.box{background:#101010;border:1px solid #222;border-radius:16px;padding:14px;margin-top:14px}
-textarea,input,select{width:100%;background:#000;color:#fff;border:1px solid #333;border-radius:10px;padding:11px;margin-top:8px}
-.cams{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.cam{background:#1a1a1a;border:1px solid #333;padding:8px 12px;border-radius:20px;font-size:12px}
-.cam.active{background:#fff;color:#000;font-weight:700}
-.btn{width:100%;background:#fff;color:#000;border:none;padding:15px;border-radius:12px;font-weight:900;margin-top:12px}
-.btn2{width:100%;background:#101010;color:#fff;border:1px solid #333;padding:12px;border-radius:12px;font-weight:700;margin-top:8px}
-.nav{position:fixed;bottom:0;left:0;right:0;background:#101010;border-top:1px solid #222;display:flex;padding:10px 0;padding-bottom:20px}
-.nav div{flex:1;text-align:center;font-size:11px;color:#BDBDBD;cursor:pointer}
-.nav div.active{color:#fff;font-weight:800}
-.nav div span{font-size:22px;display:block}
-.stat{background:#1a1a1a;border:1px solid #222;border-radius:14px;padding:12px}
-.char{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #222}
-.face{width:44px;height:44px;background:#333;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#000;color:#fff;font-family:system-ui,-apple-system,sans-serif;padding-bottom:80px}
+.page{display:none;max-width:420px;margin:0 auto;padding:20px}
+.page.active{display:block}
+input,textarea,select{width:100%;background:#111;border:1px solid #333;border-radius:14px;color:#fff;padding:14px;font-size:15px;margin:8px 0 15px;outline:none}
+input:focus,textarea:focus{border-color:#4F7CFF}
+textarea{min-height:90px;resize:none}
+button{cursor:pointer;border:none;border-radius:30px;padding:13px 18px;font-size:14px;font-weight:600}
+.btn-blue{background:#1E3A8A;color:#fff;width:100%;padding:15px;font-size:16px}
+.btn-white{background:#fff;color:#000;width:100%;padding:13px}
+.btn-google{background:#222;color:#fff;width:100%;padding:14px;border:1px solid #333;display:flex;align-items:center;justify-content:center;gap:10px}
+.pill{background:#111;color:#ccc;border:1px solid #333;padding:9px 14px;border-radius:20px;font-size:13px;font-weight:500}
+.pill.active{background:#fff;color:#000;border-color:#fff}
+.card{background:#111;border:1px solid #222;border-radius:16px;padding:16px;margin:12px 0}
+.top{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid #222;max-width:420px;margin:0 auto}
+.logo{font-size:20px;font-weight:900;letter-spacing:2px}
+.logo span{color:#4F7CFF}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;border-top:1px solid #222;padding:12px;display:flex;justify-content:space-around;z-index:99}
+.nav button{background:none;color:#888;font-size:13px}
+.nav button.active{color:#fff}
+label{font-size:14px}
+.small{color:#888;font-size:12px;line-height:1.5}
+.badge{background:#FF2D55;color:#fff;padding:2px 8px;border-radius:10px;font-size:12px}
+.price-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #222}
 </style>
 </head>
-<body><div id="p-auth" class="page active">
-<div class="box"><h2>👋 Welcome to PRIME AI</h2>
-<input id="regName" placeholder="Full Name" style="width:90%;padding:12px;margin:5px">
-<input id="regPhone" placeholder="Phone e.g 0546439879" style="width:90%;padding:12px;margin:5px">
-<input id="regPass" type="password" placeholder="Create Password" style="width:90%;padding:12px;margin:5px">
-<button onclick="doRegister()" style="width:95%;padding:12px;background:#25D366;color:white;border:none;border-radius:10px;margin:5px">REGISTER</button>
-<hr>
-<input id="logPhone" placeholder="Phone" style="width:90%;padding:12px;margin:5px">
-<input id="logPass" type="password" placeholder="Password" style="width:90%;padding:12px;margin:5px">
-<button onclick="doLogin()" style="width:95%;padding:12px;background:black;color:white;border:none;border-radius:10px;margin:5px">LOGIN</button>
-<p id="authMsg"></p>
-</div></div>
-<div class="top"><div class="logo">PRIME<span> AI</span></div><div class="badge">PRO • GHANA</div></div>
-<script>
-function doRegister(){
-var n=document.getElementById('regName').value;
-var p=document.getElementById('regPhone').value;
-var pw=document.getElementById('regPass').value;
-if(!n||!p||!pw){document.getElementById('authMsg').innerText='Fill all fields';return;}
-localStorage.setItem('prime_user_'+p, JSON.stringify({name:n,phone:p,pass:pw}));
-localStorage.setItem('prime_logged',p);
-document.getElementById('authMsg').innerText='Registered! Welcome '+n;
-show('home');
-}
-function doLogin(){
-var p=document.getElementById('logPhone').value;
-var pw=document.getElementById('logPass').value;
-var u=JSON.parse(localStorage.getItem('prime_user_'+p)||'null');
-if(u && u.pass===pw){localStorage.setItem('prime_logged',p);show('home');}
-else{document.getElementById('authMsg').innerText='Wrong phone or password';}
-}
-</script>
+<body>
+
+<div class="top">
+<div class="logo">👑 PRIME <span>AI</span></div>
+<div style="font-size:12px;background:#111;border:1px solid #333;padding:6px 12px;border-radius:20px">⭐ <span id="creditBal">50</span> Credits</div>
+</div>
+
+<!-- AUTH - CLONK STYLE -->
+<div id="p-auth" class="page active">
+<div style="text-align:center;padding:10px 0">
+<div style="font-size:28px;font-weight:900;letter-spacing:2px">👑 PRIME <span style="color:#4F7CFF">AI</span></div>
+<h1 style="font-size:26px;line-height:1.2;margin:30px 0 5px">GET 50 CREDITS<br>FREE ON SIGNUP</h1>
+<p style="color:#aaa;font-size:14px">Plus <span class="badge">50 free</span> credits to start</p>
+<button class="btn-google" onclick="googleLogin()" style="margin:20px 0"><span style="background:#fff;color:#000;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900">G</span> Continue with Google</button>
+<div style="color:#777;margin:10px 0">or</div>
+<div style="text-align:left">
+<label>Name</label>
+<input id="regName" placeholder="">
+<label>Email</label>
+<input id="regPhone" placeholder="" type="email">
+<label style="display:flex;justify-content:space-between">Password <span style="color:#888">8 or more characters</span></label>
+<input id="regPass" type="password" placeholder="">
+</div>
+<button class="btn-blue" onclick="doRegister()">Create account</button>
+<p id="authMsg" style="color:#FF6B6B;font-size:13px;min-height:18px;margin-top:8px"></p>
+<p class="small" style="text-align:center">By creating an account you agree to the<br><u>Terms</u> and <u>Privacy Policy</u>.</p>
+<div style="margin-top:20px;border-top:1px solid #222;padding-top:15px">
+<p style="color:#888;font-size:13px;text-align:center">Already have account?</p>
+<input id="logPhone" placeholder="Email" type="email">
+<input id="logPass" type="password" placeholder="Password">
+<button class="btn-white" onclick="doLogin()">LOGIN</button>
+</div>
+</div>
+</div>
+
+<!-- HOME -->
 <div id="p-home" class="page">
-<h1>Create Cinematic<br>AI Video.</h1><p class="sub">Vidu Q2 • Higgsfield Camera • Character DNA</p>
-<div class="box"><label style="font-size:11px;color:#BDBDBD">DESCRIBE YOUR SCENE</label><textarea>A beautiful Ghanaian lady in Makola Market, golden hour, wearing kente, cinematic</textarea>
-<label style="font-size:11px;color:#BDBDBD;display:block;margin-top:10px">🎥 CAMERA</label><div class="cams"><div class="cam active">Dolly In</div><div class="cam">Crash Zoom</div><div class="cam">360 Orbit</div><div class="cam">FPV Drone</div><div class="cam">Whip Pan</div></div>
-<label style="font-size:11px;color:#BDBDBD;display:block;margin-top:10px">🎙️ VOICE</label><div class="cams"><div class="cam active">English</div><div class="cam">Twi</div><div class="cam">Ga</div><div class="cam">Pidgin</div></div>
-<button class="btn" onclick="alert('Generating with Vidu Q2 + Claude Sonnet 5.5...')">✨ GENERATE VIDEO - 50 CREDITS</button></div>
-<div class="box"><h3>💳 PRICING - Pay with MoMo</h3><p style="font-size:13px;margin-top:6px">Free: 3/day • Starter GH₵60 • Pro GH₵150 • Studio GH₵300</p><button class="btn">UPGRADE TO PRO →</button></div>
+<h1>Create Cinematic<br>AI Video.</h1>
+<p style="color:#888;font-size:13px;margin:8px 0">Vidu Q2 • Higgsfield Camera • Character DNA</p>
+
+<label style="margin-top:15px;display:block">DESCRIBE YOUR SCENE</label>
+<textarea id="scene" placeholder="e.g. A young Ghanaian woman walks through Osu at golden hour, cinematic, slow motion..."></textarea>
+
+<label>CAMERA MOVEMENT</label>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 15px" id="camBox">
+<button class="pill active" onclick="setCam(this,'Dolly In')">Dolly In</button>
+<button class="pill" onclick="setCam(this,'Pan Left')">Pan Left</button>
+<button class="pill" onclick="setCam(this,'Zoom Out')">Zoom Out</button>
+<button class="pill" onclick="setCam(this,'Orbit')">Orbit</button>
+<button class="pill" onclick="setCam(this,'Crash Zoom')">Crash Zoom</button>
 </div>
 
+<label>VOICE / AUDIO</label>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 15px" id="voiceBox">
+<button class="pill active" onclick="setVoice(this,'No Voice')">No Voice</button>
+<button class="pill" onclick="setVoice(this,'Female - Soft')">Female - Soft</button>
+<button class="pill" onclick="setVoice(this,'Male - Deep')">Male - Deep</button>
+<button class="pill" onclick="setVoice(this,'Narrator')">Narrator</button>
+</div>
+
+<button class="btn-blue" onclick="generateVideo()">Generate Video • 50 Credits</button>
+<p id="genMsg" style="font-size:13px;color:#aaa;margin-top:10px;min-height:18px"></p>
+
+<div class="card" style="margin-top:20px">
+<h2 style="font-size:18px">Pricing</h2>
+<div class="price-row"><div><b>Starter</b><br><span class="small">100 Credits • 2 Videos</span></div><button class="pill" onclick="payMoMo('Starter - GHS 50')">GHS 50</button></div>
+<div class="price-row"><div><b>Pro ⭐ Most Popular</b><br><span class="small">500 Credits • 10 Videos</span></div><button class="pill" onclick="payMoMo('Pro - GHS 150')">GHS 150</button></div>
+<div class="price-row" style="border:none"><div><b>Studio</b><br><span class="small">2000 Credits • Unlimited DNA</span></div><button class="pill" onclick="payMoMo('Studio - GHS 400')">GHS 400</button></div>
+<button class="btn-blue" style="margin-top:12px" onclick="payMoMo('Pro - GHS 150')">UPGRADE TO PRO</button>
+<p class="small" style="text-align:center;margin-top:8px">Pay with MTN MoMo • Telecel Cash • AT Money</p>
+</div>
+
+<div class="card">
+<h2 style="font-size:18px">My Videos</h2>
+<p class="small" id="myVideos">No videos yet. Generate your first cinematic video above.</p>
+</div>
+<button onclick="logout()" style="background:none;color:#888;width:100%;font-size:13px">Log Out</button>
+</div>
+
+<!-- DNA -->
 <div id="p-dna" class="page">
-<h1>Character DNA</h1><p class="sub">Save once. Use in 100 videos.</p>
-<div class="box"><h3>✨ NEW CHARACTER</h3><input placeholder="Name - e.g. Ama Makola Queen"><input placeholder="Voice - Twi / English"><button class="btn">SAVE CHARACTER DNA →</button></div>
-<div class="box"><h3>👤 YOUR CHARACTERS</h3>
-<div class="char"><div class="face">👩🏾</div><div style="flex:1"><b>Ama - Makola Queen</b><p style="font-size:11px;color:#BDBDBD">24 videos • Twi</p></div><b style="color:#34c759;font-size:11px">98% Match</b></div>
-<div class="char"><div class="face">👨🏾</div><div style="flex:1"><b>Kwame - UENR Farmer</b><p style="font-size:11px;color:#BDBDBD">11 videos • English</p></div><b style="color:#34c759;font-size:11px">96% Match</b></div>
-</div>
+<h1>Character DNA 🧬</h1>
+<p style="color:#888;font-size:13px;margin:8px 0">Save your face once, use it in every video.</p>
+<label>Character Name</label>
+<input id="dnaName" placeholder="e.g. Yuuu">
+<label>Describe Character</label>
+<textarea id="dnaDesc" placeholder="e.g. 22 year old Ghanaian woman, braids, brown eyes, smiling..."></textarea>
+<button class="btn-blue" onclick="saveDNA()">Save Character DNA</button>
+<p id="dnaMsg" style="font-size:13px;color:#4ade80;margin-top:10px"></p>
+<div id="dnaList"></div>
 </div>
 
+<!-- ADMIN -->
 <div id="p-admin" class="page">
-<h1>Admin Panel</h1><p class="sub">Onward Motion • onwardmotion4@gmail.com</p>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
-<div class="stat"><b style="font-size:20px">GH₵ 4,820</b><p style="font-size:11px;color:#BDBDBD">TOTAL REVENUE</p></div>
-<div class="stat"><b style="font-size:20px">1,247</b><p style="font-size:11px;color:#BDBDBD">USERS</p></div>
-<div class="stat"><b style="font-size:20px">8,932</b><p style="font-size:11px;color:#BDBDBD">VIDEOS</p></div>
-<div class="stat"><b style="font-size:20px">342</b><p style="font-size:11px;color:#BDBDBD">PRO USERS</p></div>
-</div>
-<div class="box"><h3>💳 CHANGE PRICING</h3><input value="Starter: GH₵ 60"><input value="Pro: GH₵ 150"><input value="Studio: GH₵ 300"><button class="btn">SAVE PRICING</button></div>
-<div class="box"><h3>🎁 PROMO: PRIME100 - 234 used</h3><button class="btn2">CREATE NEW CODE</button></div>
+<h1>Admin</h1>
+<div class="card"><b>Total Users</b><p id="adminUsers" style="font-size:28px">1</p></div>
+<div class="card"><b>Total Videos Generated</b><p id="adminVideos" style="font-size:28px">0</p></div>
+<div class="card"><b>Revenue (GHS)</b><p style="font-size:28px">0</p></div>
+<p class="small">Admin view only. Connect to backend later for real stats.</p>
 </div>
 
 <div class="nav">
-<div class="active" onclick="show('home',this)"><span>🏠</span>Home</div>
-<div onclick="show('dna',this)"><span>🧬</span>DNA</div>
-<div onclick="show('admin',this)"><span>👑</span>Admin</div>
+<button id="nav-home" class="active" onclick="show('home')">🏠<br>Home</button>
+<button id="nav-dna" onclick="show('dna')">🧬<br>DNA</button>
+<button id="nav-admin" onclick="show('admin')">⚙️<br>Admin</button>
 </div>
 
 <script>
-function show(p,el){
-document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+let cam='Dolly In', voice='No Voice';
+function show(p){
+document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
 document.getElementById('p-'+p).classList.add('active');
-document.querySelectorAll('.nav div').forEach(x=>x.classList.remove('active'));
-el.classList.add('active');
+document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+let n=document.getElementById('nav-'+p); if(n) n.classList.add('active');
+window.scrollTo(0,0);
 }
-</script>
-  <script>
-var waNumber="233546439879";
-function payMoMo(plan,price){
-var m="Hi PRIME AI! I want "+plan+" GHs "+price+" via MoMo. My number is: ";
-window.open("https://wa.me/"+waNumber+"?text="+encodeURIComponent(m),"_blank");
+function setCam(el,v){cam=v;document.querySelectorAll('#camBox .pill').forEach(b=>b.classList.remove('active'));el.classList.add('active');}
+function setVoice(el,v){voice=v;document.querySelectorAll('#voiceBox .pill').forEach(b=>b.classList.remove('active'));el.classList.add('active');}
+function googleLogin(){
+localStorage.setItem('prime_user',JSON.stringify({name:'Google User',phone:'google@prime.ai',pass:'google1234'}));
+localStorage.setItem('prime_logged','1'); show('home');
 }
-function buyNow(){payMoMo("PRIME AI Access","20");}
+function doRegister(){
+let n=document.getElementById('regName').value.trim();
+let p=document.getElementById('regPhone').value.trim();
+let pw=document.getElementById('regPass').value;
+let m=document.getElementById('authMsg');
+if(!n||!p||!pw){m.textContent='Fill all fields';return;}
+if(pw.length<8){m.textContent='Password must be 8+ characters';return;}
+localStorage.setItem('prime_user',JSON.stringify({name:n,phone:p,pass:pw}));
+localStorage.setItem('prime_logged','1');
+localStorage.setItem('prime_credits','50');
+document.getElementById('creditBal').textContent='50';
+show('home');
+}
+function doLogin(){
+let p=document.getElementById('logPhone').value.trim();
+let pw=document.getElementById('logPass').value;
+let u=JSON.parse(localStorage.getItem('prime_user')||'{}');
+if(p===u.phone && pw===u.pass){localStorage.setItem('prime_logged','1');show('home');}
+else{document.getElementById('authMsg').textContent='Wrong email or password. Register first.';}
+}
+function logout(){localStorage.removeItem('prime_logged');show('auth');}
+function generateVideo(){
+let s=document.getElementById('scene').value.trim();
+let credits=parseInt(localStorage.getItem('prime_credits')||'50');
+if(!s){document.getElementById('genMsg').textContent='Please describe your scene first.';return;}
+if(credits<50){document.getElementById('genMsg').textContent='Not enough credits. Upgrade to Pro.';return;}
+credits-=50; localStorage.setItem('prime_credits',credits);
+document.getElementById('creditBal').textContent=credits;
+let count=parseInt(localStorage.getItem('prime_videos')||'0')+1;
+localStorage.setItem('prime_videos',count);
+document.getElementById('genMsg').textContent='🎬 Generating: '+s.substring(0,60)+'... | Camera: '+cam+' | Voice: '+voice+' (Demo - Connect Vidu API for real video)';
+document.getElementById('myVideos').textContent=count+' video(s) generated. Latest: '+s.substring(0,50);
+document.getElementById('adminVideos').textContent=count;
+}
+function payMoMo(plan){
+let msg=encodeURIComponent('Hi PRIME AI, I want to pay for '+plan+' with MoMo. My email: ');
+window.open('https://wa.me/233550000000?text='+msg,'_blank');
+}
+function saveDNA(){
+let n=document.getElementById('dnaName').value.trim();
+let d=document.getElementById('dnaDesc').value.trim();
+if(!n||!d){document.getElementById('dnaMsg').textContent='Fill name and description';return;}
+let list=JSON.parse(localStorage.getItem('prime_dna')||'[]');
+list.push({name:n,desc:d}); localStorage.setItem('prime_dna',JSON.stringify(list));
+document.getElementById('dnaMsg').textContent='✅ Saved '+n;
+renderDNA();
+}
+function renderDNA(){
+let list=JSON.parse(localStorage.getItem('prime_dna')||'[]');
+document.getElementById('dnaList').innerHTML=list.map(x=>'<div class="card"><b>'+x.name+'</b><br><span class="small">'+x.desc+'</span></div>').join('');
+}
+window.onload=function(){
+let c=localStorage.getItem('prime_credits'); if(c) document.getElementById('creditBal').textContent=c;
+let v=localStorage.getItem('prime_videos'); if(v) document.getElementById('adminVideos').textContent=v;
+renderDNA();
+if(localStorage.getItem('prime_logged')==='1'){show('home');}else{show('auth');}
+}
 </script>
 </body>
-  
 </html>
