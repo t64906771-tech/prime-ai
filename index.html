@@ -1,176 +1,80 @@
 <!DOCTYPE html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PRIME AI</title>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRIME AI - Genjutsu</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#000;color:#fff;font-family:system-ui;padding:16px;padding-bottom:90px}
-.top{display:flex;justify-content:space-between;align-items:center}
-.badge{border:1px solid #333;padding:6px 12px;border-radius:20px;font-size:13px}
-input,select,textarea{width:100%;padding:13px;margin-top:10px;border-radius:12px;border:1px solid #333;background:#111;color:#fff;font-size:15px}
-button{cursor:pointer}.page{display:none}.page.active{display:block}
-.chip{padding:10px 14px;border-radius:20px;border:1px solid #333;background:#111;color:#fff;margin:4px 4px 0 0}
-.chip.active{background:#fff;color:#000}
-.btn{width:100%;padding:15px;border-radius:14px;border:none;font-weight:bold;font-size:16px;margin-top:14px}
-.blue{background:#2563eb;color:#fff}.purple{background:#a855f7;color:#fff}.green{background:#22c55e;color:#fff}.red{background:#ef4444;color:#fff}
-.card{background:#111;border:1px solid #222;padding:14px;border-radius:14px;margin-top:12px}
-.nav{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid #222;display:flex;justify-content:space-around;padding:10px 0}
-.nav button{background:none;border:none;color:#aaa;font-size:13px}.nav button.active{color:#fff}
-video{width:100%;border-radius:12px;margin-top:10px}
-</style></head><body>
+body{background:#0a0a0a;color:white;font-family:sans-serif;margin:0}
+header{padding:15px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:22px;font-weight:900} .logo span{color:#a3ff00}
+.btn{background:#a3ff00;color:black;border:none;padding:10px 18px;border-radius:20px;font-weight:800}
+.banner{background:linear-gradient(90deg,#1a1a1a,#2a2a00);margin:15px;padding:20px;border-radius:15px}
+.tabs{display:flex;gap:10px;margin:15px}
+.tab{padding:10px 16px;border-radius:20px;background:#222;border:1px solid #333;cursor:pointer}
+.tab.active{background:#a3ff00;color:black}
+.card{background:#151515;margin:15px;padding:15px;border-radius:15px}
+input{width:100%;padding:12px;margin:8px 0;border-radius:10px;background:#222;border:1px solid #333;color:white}
+.upload{border:2px dashed #444;padding:20px;text-align:center;border-radius:12px;margin:10px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:15px}
+.grid img{width:100%;border-radius:12px}
+</style>
+</head>
+<body>
 
-<div class="top"><h2 style="margin:0">👑 PRIME <span style="color:#60a5fa">AI</span></h2><div class="badge">⭐ <span id="creditTop">0</span> Credits</div></div>
+<header>
+<div class="logo">PRIME<span> AI</span></div>
+<button class="btn">Upgrade</button>
+</header>
 
-<!-- AUTH -->
-<div class="page active" id="p-auth">
-<h1>Welcome to PRIME AI</h1><p style="opacity:.7">Login or Create Account</p>
-<div class="card"><h3>REGISTER</h3>
-<input id="regName" placeholder="Full Name">
-<input id="regEmail" placeholder="Email">
-<input id="regPhone" placeholder="Phone">
-<input id="regPass" type="password" placeholder="Password">
-<button class="btn green" onclick="doRegister()">Create Account</button>
-</div>
-<div class="card"><h3>LOGIN</h3>
-<input id="logEmail" placeholder="Email">
-<input id="logPass" type="password" placeholder="Password">
-<button class="btn blue" onclick="doLogin()">LOGIN</button>
-</div>
-<p id="authMsg" style="text-align:center"></p>
+<div class="banner">
+<h2>GENJUTSU</h2>
+<p>Transfer motion to your characters or objects while keeping the rest unchanged.</p>
+<button class="btn" onclick="document.getElementById('studio').scrollIntoView()">Start generating →</button>
 </div>
 
-<!-- HOME -->
-<div class="page" id="p-home">
-<h1>Create Cinematic<br>AI Video.</h1><p style="opacity:.7">Vidu Q2 • Higgsfield Camera • Character DNA</p>
-<p>DESCRIBE YOUR SCENE</p>
-<textarea id="scene" placeholder="Describe your scene... e.g. A lady walking in Osu at night, cinematic"></textarea>
-<p>CAMERA MOVEMENT</p>
-<div><button class="chip active" onclick="pickCam(this)">Dolly In</button><button class="chip" onclick="pickCam(this)">Pan Left</button><button class="chip" onclick="pickCam(this)">Zoom Out</button><button class="chip" onclick="pickCam(this)">Orbit</button><button class="chip" onclick="pickCam(this)">Crash Zoom</button></div>
-<p>VOICE / AUDIO</p>
-<div><button class="chip" onclick="pickVoice(this)">No Voice</button><button class="chip active" onclick="pickVoice(this)">Female - Soft</button><button class="chip" onclick="pickVoice(this)">Male - Deep</button><button class="chip" onclick="pickVoice(this)">Narrator</button></div>
-<button class="btn blue" onclick="generateVideo()">Generate Video • 50 Credits</button>
-<div id="homeResult"></div>
-<button class="btn red" onclick="doLogout()">Log Out</button>
+<div class="tabs">
+<div class="tab active" id="tabA" onclick="switchMode('A')">🔥 Motion Transfer</div>
+<div class="tab" id="tabB" onclick="switchMode('B')">👕 Outfit Swap</div>
 </div>
 
-<!-- DNA -->
-<div class="page" id="p-dna">
-<h2>🧬 Character DNA</h2><p style="opacity:.7">Save your face / character to reuse in every video.</p>
-<input id="dnaName" placeholder="Character Name e.g. Kwame">
-<input type="file" id="dnaFile" accept="image/*">
-<button class="btn purple" onclick="saveDNA()">💾 Save DNA</button>
-<p id="dnaMsg"></p><div id="dnaList"></div>
+<div class="card" id="studio">
+<h3 id="title">A) Motion Transfer</h3>
+<p id="desc">Upload your photo + a motion video. PRIME puts the motion on your photo.</p>
+
+<div class="upload">📸 <b>1. Your Character Photo</b><br><input type="file" accept="image/*"></div>
+<div class="upload">🎬 <b>2. Motion Video</b><br><input type="file" accept="video/*"></div>
+
+<input type="text" id="prompt" placeholder="e.g. Make him dance Azonto in Accra, keep face same">
+<button class="btn" style="width:100%;padding:15px" onclick="generate()">✨ GENERATE PRIME VIDEO</button>
+<p id="status" style="text-align:center"></p>
 </div>
 
-<!-- GENJUTSU -->
-<div class="page" id="p-genjutsu">
-<h2>👁️ GENJUTSU - Video Swap</h2><p style="opacity:.7">Upload 4-30 sec video. Keep same motion, swap person / scene / style.</p>
-<input type="file" id="genVideo" accept="video/*" onchange="previewGenjutsu(event)">
-<video id="genPreview" controls style="display:none"></video>
-<select id="genMode">
-<option>Swap Person - Keep motion, change who is in shot</option>
-<option>Swap Scene - Keep person, change location</option>
-<option>Swap Style - Cinematic / Anime / Superhero</option>
-</select>
-<textarea id="genPrompt" placeholder="Describe change... e.g. Turn me into a superhero walking in Paris, same walk, cinematic"></textarea>
-<button class="btn purple" onclick="generateGenjutsu()">✨ APPLY GENJUTSU</button>
-<div id="genResult"></div>
-</div>
-
-<!-- ADMIN -->
-<div class="page" id="p-admin">
-<h2>⚙️ Admin</h2>
-<div class="card"><p>Total Users: <b id="adminUsers">0</b></p><p>Your Credits: <b id="adminCredits">0</b></p>
-<button class="btn green" onclick="addCredits()">+ Add 100 Credits (Test)</button>
-<button class="btn red" onclick="clearAll()">Clear All Data</button></div>
-</div>
-
-<div class="nav" id="mainNav" style="display:none">
-<button id="nav-home" onclick="show('home')">🏠<br>Home</button>
-<button id="nav-dna" onclick="show('dna')">🧬<br>DNA</button>
-<button id="nav-genjutsu" onclick="show('genjutsu')">👁️<br>Genjutsu</button>
-<button id="nav-admin" onclick="show('admin')">⚙️<br>Admin</button>
+<div style="padding:0 15px"><h3>Community Trending</h3></div>
+<div class="grid">
+<img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400">
+<img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400">
+<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400">
+<img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400">
 </div>
 
 <script>
-let cam="Dolly In", voice="Female - Soft", currentUser=null;
-function getUsers(){return JSON.parse(localStorage.getItem('prime_users')||'[]')}
-function saveUsers(u){localStorage.setItem('prime_users',JSON.stringify(u))}
-function show(p){
-document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
-document.getElementById('p-'+p).classList.add('active');
-document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
-let n=document.getElementById('nav-'+p); if(n) n.classList.add('active');
-let nav=document.getElementById('mainNav');
-if(p==='auth'){nav.style.display='none'}else{nav.style.display='flex'}
-window.scrollTo(0,0);
-if(p==='admin'){updateAdmin()}
+let mode='A';
+function switchMode(m){
+  mode=m;
+  document.getElementById('tabA').classList.toggle('active',m==='A');
+  document.getElementById('tabB').classList.toggle('active',m==='B');
+  if(m==='A'){
+    document.getElementById('title').innerText='A) Motion Transfer';
+    document.getElementById('desc').innerText='Upload your photo + a motion video. PRIME puts the motion on your photo.';
+  } else {
+    document.getElementById('title').innerText='B) Outfit Background Swap';
+    document.getElementById('desc').innerText='Upload your photo + outfit photo. PRIME swaps outfit & background, keeps your face.';
+  }
 }
-function doRegister(){
-let name=document.getElementById('regName').value.trim();
-let email=document.getElementById('regEmail').value.trim().toLowerCase();
-let phone=document.getElementById('regPhone').value.trim();
-let pass=document.getElementById('regPass').value;
-if(!name||!email||!pass){document.getElementById('authMsg').innerHTML='<span style="color:#f87171">Fill all fields</span>';return}
-let users=getUsers();
-if(users.find(u=>u.email===email)){document.getElementById('authMsg').innerHTML='<span style="color:#f87171">Email already exists, LOGIN below</span>';return}
-users.push({name:name,email:email,phone:phone,pass:pass,credits:0});
-saveUsers(users);
-document.getElementById('authMsg').innerHTML='<span style="color:#4ade80">✅ Account created! Now LOGIN below</span>';
-document.getElementById('logEmail').value=email;
+function generate(){
+  document.getElementById('status').innerText='⏳ PRIME is generating... (Demo mode - connect API next)';
+  setTimeout(()=>{ document.getElementById('status').innerText='✅ Done! This is your PRIME Genjutsu demo. Connect Higgsfield / Seedance API to make it real.' },2000);
 }
-function doLogin(){
-let email=document.getElementById('logEmail').value.trim().toLowerCase();
-let pw=document.getElementById('logPass').value;
-let users=getUsers();
-let u=users.find(x=>x.email===email);
-if(!u||pw!==u.pass){document.getElementById('authMsg').innerHTML='<span style="color:#f87171">Wrong email or password</span>';return}
-currentUser=u; localStorage.setItem('prime_session',email);
-updateCredits(); show('home');
-}
-function doLogout(){localStorage.removeItem('prime_session'); currentUser=null; show('auth')}
-function updateCredits(){
-let email=localStorage.getItem('prime_session'); if(!email) return;
-let u=getUsers().find(x=>x.email===email); if(!u) return; currentUser=u;
-document.getElementById('creditTop').innerText=u.credits;
-}
-function pickCam(b){document.querySelectorAll('#p-home .chip').forEach(c=>{if(['Dolly In','Pan Left','Zoom Out','Orbit','Crash Zoom'].includes(c.innerText)) c.classList.remove('active')}); b.classList.add('active'); cam=b.innerText}
-function pickVoice(b){document.querySelectorAll('#p-home .chip').forEach(c=>{if(['No Voice','Female - Soft','Male - Deep','Narrator'].includes(c.innerText)) c.classList.remove('active')}); b.classList.add('active'); voice=b.innerText}
-function generateVideo(){
-if(!currentUser){alert('Login first');return}
-if(currentUser.credits<50){document.getElementById('homeResult').innerHTML='<p style="color:#f87171">Not enough credits. Go to Admin > Add 100 Credits</p>';return}
-let scene=document.getElementById('scene').value||'Cinematic scene';
-let users=getUsers(); let idx=users.findIndex(x=>x.email===currentUser.email); users[idx].credits-=50; saveUsers(users); updateCredits();
-document.getElementById('homeResult').innerHTML='<div class="card">🎬 Generating...<br>Scene: '+scene+'<br>Camera: '+cam+'<br>Voice: '+voice+'<br><br>✅ Demo Video Ready! Connect Vidu API for real video.</div>';
-}
-function saveDNA(){
-let n=document.getElementById('dnaName').value.trim(); if(!n){alert('Enter name');return}
-let list=JSON.parse(localStorage.getItem('prime_dna')||'[]'); list.push({name:n,date:new Date().toLocaleDateString()}); localStorage.setItem('prime_dna',JSON.stringify(list));
-document.getElementById('dnaMsg').innerHTML='✅ DNA Saved!'; renderDNA();
-}
-function renderDNA(){
-let list=JSON.parse(localStorage.getItem('prime_dna')||'[]');
-document.getElementById('dnaList').innerHTML=list.map(d=>'<div class="card">🧬 '+d.name+' - '+d.date+'</div>').join('')||'<p>No DNA yet</p>';
-}
-let genVideoURL="";
-function previewGenjutsu(e){let f=e.target.files[0]; if(!f) return; genVideoURL=URL.createObjectURL(f); let v=document.getElementById('genPreview'); v.src=genVideoURL; v.style.display='block';}
-function generateGenjutsu(){
-let mode=document.getElementById('genMode').value; let prompt=document.getElementById('genPrompt').value;
-if(!genVideoURL){alert('Upload a video first!');return}
-if(!prompt){alert('Describe the change!');return}
-let r=document.getElementById('genResult'); r.innerHTML='<p>🌀 Casting Genjutsu... '+mode+'<br>⏳ Please wait...</p>';
-setTimeout(()=>{r.innerHTML='<p style="color:#4ade80">✅ Genjutsu Complete!</p><video src="'+genVideoURL+'" controls style="filter:contrast(1.2) saturate(1.5)"></video><p><b>Mode:</b> '+mode+'<br><b>Prompt:</b> '+prompt+'<br><small>Demo preview - Connect Higgsfield API for real swap</small></p>';},3000);
-}
-function updateAdmin(){
-document.getElementById('adminUsers').innerText=getUsers().length;
-if(currentUser) document.getElementById('adminCredits').innerText=currentUser.credits;
-}
-function addCredits(){
-let users=getUsers(); let idx=users.findIndex(x=>x.email===currentUser.email); users[idx].credits+=100; saveUsers(users); updateCredits(); updateAdmin(); alert('100 Credits Added!');
-}
-function clearAll(){if(confirm('Clear all?')){localStorage.clear(); location.reload()}}
-window.onload=function(){
-renderDNA();
-let s=localStorage.getItem('prime_session');
-if(s){let u=getUsers().find(x=>x.email===s); if(u){currentUser=u; updateCredits(); show('home'); return}}
-show('auth');
-}
-</script></body></html>
+</script>
+</body>
+</html>
