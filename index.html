@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PRIME AI - Genjutsu</title>
+<title>PRIME AI - Veo</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
 body{background:#000;color:#fff;padding:16px;padding-bottom:60px}
@@ -15,19 +15,18 @@ body{background:#000;color:#fff;padding:16px;padding-bottom:60px}
 .badge b{color:#a3ff00}
 .topbar{display:flex;justify-content:space-between;align-items:center;background:#111;border:1px solid #222;border-radius:12px;padding:10px 12px;margin:10px 0;font-size:13px}
 .topbar button{background:#222;color:#fff;border:1px solid #333;padding:6px 12px;border-radius:20px;font-size:12px}
-.tabs{display:flex;gap:8px;margin:16px 0}
-.tabs button{flex:1;padding:12px;border-radius:12px;border:1px solid #333;background:#111;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
-.tabs button.active{background:#a3ff00;color:#000;border-color:#a3ff00}
 .card{background:#111;border:1px solid #222;border-radius:16px;padding:16px;margin-bottom:12px}
 .card h3{font-size:14px;margin-bottom:10px}
 .upload{border:2px dashed #333;border-radius:12px;padding:20px;text-align:center;color:#888;font-size:13px;cursor:pointer;display:block}
 .upload input{display:none}
 .upload span{color:#a3ff00;font-weight:700}
-.preview{width:100%;border-radius:12px;margin-top:10px;display:none;max-height:220px;object-fit:cover}
-input[type=text],input[type=email],input[type=password],textarea{width:100%;background:#000;border:1px solid #333;color:#fff;border-radius:12px;padding:12px;font-size:14px;outline:none;resize:none}
-textarea{min-height:70px}
+.preview{width:100%;border-radius:12px;margin-top:10px;display:none;max-height:240px;object-fit:cover}
+input[type=text],input[type=email],input[type=password],textarea,select{width:100%;background:#000;border:1px solid #333;color:#fff;border-radius:12px;padding:12px;font-size:14px;outline:none;resize:none}
+textarea{min-height:80px}
 .gen{width:100%;background:#a3ff00;color:#000;border:none;padding:16px;border-radius:14px;font-size:16px;font-weight:800;cursor:pointer;margin-top:4px}
 .gen2{width:100%;background:#222;color:#fff;border:1px solid #333;padding:12px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px}
+.preset{display:flex;gap:8px;margin-top:10px}
+.preset button{flex:1;background:#222;color:#fff;border:1px solid #333;padding:10px;border-radius:10px;font-size:12px;font-weight:600}
 #status{background:#111;border:1px solid #222;border-radius:12px;padding:14px;font-size:13px;line-height:1.6;margin-top:14px;min-height:50px;word-break:break-word}
 #status a{color:#a3ff00;font-weight:700}
 .small{font-size:11px;color:#666;text-align:center;margin-top:10px;line-height:1.5}
@@ -38,14 +37,16 @@ textarea{min-height:70px}
 label{font-size:13px;color:#aaa;display:block;margin:12px 0 6px}
 .history-item{background:#000;border:1px solid #222;border-radius:10px;padding:10px;margin-top:8px;font-size:12px;line-height:1.5}
 .hidden{display:none!important}
+.note{background:#1a1a00;border:1px solid #333;border-radius:12px;padding:12px;font-size:12px;color:#ccc;line-height:1.6;margin-bottom:12px}
+.note b{color:#a3ff00}
 </style>
 </head>
 <body>
 
-<!-- ===== LOGIN / SIGNUP ===== -->
+<!-- LOGIN -->
 <div id="authScreen" class="auth">
   <h2>PRIME <span>AI</span></h2>
-  <p>Genjutsu • Motion Transfer • Outfit Swap<br>Powered by Veo 3.1 • Built in Accra</p>
+  <p>Veo Image-to-Video • Built in Accra</p>
   <div class="card">
     <h3 id="authTitle">Login to PRIME AI</h3>
     <label>Name (for Signup)</label>
@@ -58,87 +59,91 @@ label{font-size:13px;color:#aaa;display:block;margin:12px 0 6px}
     <button class="gen2" onclick="toggleAuth()">Don't have account? Sign Up</button>
     <div id="authMsg" style="font-size:12px;color:#a3ff00;text-align:center;margin-top:10px"></div>
   </div>
-  <p class="small">Your account is saved only on this phone. No data sent to us.</p>
 </div>
 
-<!-- ===== MAIN APP ===== -->
+<!-- APP -->
 <div id="appScreen" class="hidden">
   <div class="header">
     <h1>PRIME <span>AI</span></h1>
-    <p>Genjutsu • Motion Transfer • Outfit Swap • Powered by Veo 3.1</p>
+    <p>Veo 3.1 • Image to Video • Cinematic</p>
     <div class="badge">Status: <b>Ready</b> • prime-ai-mu.vercel.app</div>
   </div>
 
   <div class="topbar">
-    <span>👋 Hi, <b id="userName">User</b> <br><span id="userEmail" style="color:#888;font-size:11px"></span></span>
+    <span>👋 Hi, <b id="userName">User</b><br><span id="userEmail" style="color:#888;font-size:11px"></span></span>
     <button onclick="logout()">Logout</button>
   </div>
 
-  <div class="tabs">
-    <button id="tabMotion" class="active" onclick="setMode('motion')">⚡ Motion Transfer</button>
-    <button id="tabOutfit" onclick="setMode('outfit')">👕 Outfit Swap</button>
+  <div class="note">
+    <b>How this works (honest):</b><br>
+    1. Upload your photo = First frame<br>
+    2. Write what you want him to do<br>
+    3. Veo <b>invents</b> the movement from your prompt. It does NOT copy a dance video. For best Azonto, describe the moves in detail.
   </div>
 
   <div class="card">
-    <h3 id="label1">1. Your Photo (Character)</h3>
-    <label class="upload">Tap to upload photo<br><span>Choose Image</span><input type="file" id="photo" accept="image/*" onchange="showPreview(this,'photoPrev')"></label>
+    <h3>1. Your Photo (First Frame)</h3>
+    <label class="upload">Tap to upload photo<br><span>Choose Image</span><input type="file" id="photo" accept="image/*" onchange="showPreview(this)"></label>
     <img id="photoPrev" class="preview">
   </div>
 
   <div class="card">
-    <h3 id="label2">2. Motion Video</h3>
-    <label class="upload">Tap to upload motion video / outfit photo<br><span>Choose File</span><input type="file" id="video" accept="image/*,video/*" onchange="showPreview(this,'videoPrev')"></label>
-    <img id="videoPrevImg" class="preview">
-    <video id="videoPrev" class="preview" controls></video>
-  </div>
-
-  <div class="card">
-    <h3>3. Prompt</h3>
-    <textarea id="prompt">Make him dance Azonto in Accra, keep his face exactly the same, energetic, street style</textarea>
-    <div style="display:flex;gap:8px;margin-top:10px">
-      <button class="gen2" style="margin:0" onclick="setPrompt('azonto')">Azonto 🕺</button>
-      <button class="gen2" style="margin:0" onclick="setPrompt('osu')">Osu Night 🌃</button>
-      <button class="gen2" style="margin:0" onclick="setPrompt('studio')">Studio ✨</button>
+    <h3>2. What should happen? (Prompt)</h3>
+    <textarea id="prompt">A young Ghanaian man in Accra dancing energetic Azonto, fast footwork, hand gestures, smiling, street style, crowd in background, cinematic, 9:16 vertical</textarea>
+    <div class="preset">
+      <button onclick="setPrompt('azonto')">Azonto 🕺</button>
+      <button onclick="setPrompt('osu')">Osu Night 🌃</button>
+      <button onclick="setPrompt('studio')">Studio ✨</button>
     </div>
+    <label>Aspect Ratio</label>
+    <select id="aspect">
+      <option value="9:16">9:16 - Vertical (TikTok / Reels)</option>
+      <option value="16:9">16:9 - Landscape (YouTube)</option>
+      <option value="1:1">1:1 - Square</option>
+    </select>
+    <label>Duration Hint (Veo decides, but prompt helps)</label>
+    <select id="duration">
+      <option value="8s">~8 seconds - Quick clip</option>
+      <option value="long">Longer - Keep dancing</option>
+    </select>
   </div>
 
-  <button class="gen" id="genBtn" onclick="generate()">🚀 GENERATE PRIME VIDEO</button>
+  <button class="gen" id="genBtn" onclick="generate()">🚀 GENERATE WITH VEO</button>
 
-  <div id="status">Ready. Upload photo + video, then tap GENERATE.<br>Your API key is saved only on your phone.</div>
+  <div id="status">Ready. Upload photo, write prompt, tap GENERATE.<br>Keep Safari open 1-2 mins while Veo renders.</div>
 
   <div class="card" style="margin-top:12px">
     <h3>📜 Your History</h3>
-    <div id="history">No videos yet. Your generations will appear here.</div>
+    <div id="history">No videos yet.</div>
     <button class="gen2" onclick="clearHistory()">Clear History</button>
   </div>
 
   <div class="card">
     <h3>🔑 API Key</h3>
-    <p style="font-size:12px;color:#888;line-height:1.5">Your Google AI Studio key is saved on your phone only. Tap below to change it.</p>
+    <p style="font-size:12px;color:#888;line-height:1.5">Saved only on your phone.</p>
     <button class="gen2" onclick="changeKey()">Change / Re-enter API Key</button>
     <button class="gen2" onclick="clearKey()">Remove API Key</button>
   </div>
 
-  <div class="small">PRIME AI • Built in Accra • Veo 3.1 via Google AI Studio<br>Keep Safari open while Veo renders (1-2 mins)</div>
+  <div class="small">PRIME AI • Veo 3.1 via Google AI Studio<br>Tip: Detailed prompts = better dance. E.g. "fast Azonto footwork, arms swinging, shoulder bounce"</div>
 </div>
 
 <script>
-// ===== AUTH =====
-let isSignup = false;
+let isSignup=false;
 function toggleAuth(){
-  isSignup = !isSignup;
-  document.getElementById('authTitle').innerText = isSignup ? 'Create PRIME AI Account' : 'Login to PRIME AI';
-  document.getElementById('authBtn').innerText = isSignup ? 'SIGN UP' : 'LOGIN';
-  document.getElementById('authName').style.display = isSignup ? 'block' : 'none';
+  isSignup=!isSignup;
+  document.getElementById('authTitle').innerText=isSignup?'Create PRIME AI Account':'Login to PRIME AI';
+  document.getElementById('authBtn').innerText=isSignup?'SIGN UP':'LOGIN';
+  document.getElementById('authName').style.display=isSignup?'block':'none';
 }
 function checkLogin(){
-  const user = localStorage.getItem('prime_user');
+  const user=localStorage.getItem('prime_user');
   if(user){
-    const u = JSON.parse(user);
+    const u=JSON.parse(user);
     document.getElementById('authScreen').classList.add('hidden');
     document.getElementById('appScreen').classList.remove('hidden');
-    document.getElementById('userName').innerText = u.name || 'User';
-    document.getElementById('userEmail').innerText = u.email || '';
+    document.getElementById('userName').innerText=u.name||'User';
+    document.getElementById('userEmail').innerText=u.email||'';
     loadHistory();
   } else {
     document.getElementById('authScreen').classList.remove('hidden');
@@ -146,128 +151,96 @@ function checkLogin(){
   }
 }
 function doAuth(){
-  const name = document.getElementById('authName').value.trim();
-  const email = document.getElementById('authEmail').value.trim().toLowerCase();
-  const pass = document.getElementById('authPass').value.trim();
-  const msg = document.getElementById('authMsg');
-  if(!email || !pass){ msg.innerText='Enter email + password'; return; }
+  const name=document.getElementById('authName').value.trim();
+  const email=document.getElementById('authEmail').value.trim().toLowerCase();
+  const pass=document.getElementById('authPass').value.trim();
+  const msg=document.getElementById('authMsg');
+  if(!email||!pass){msg.innerText='Enter email + password';return;}
   if(isSignup){
-    if(!name){ msg.innerText='Enter your name'; return; }
-    const users = JSON.parse(localStorage.getItem('prime_users')||'{}');
-    users[email] = {name, email, pass};
-    localStorage.setItem('prime_users', JSON.stringify(users));
-    localStorage.setItem('prime_user', JSON.stringify({name, email}));
+    if(!name){msg.innerText='Enter your name';return;}
+    const users=JSON.parse(localStorage.getItem('prime_users')||'{}');
+    users[email]={name,email,pass};
+    localStorage.setItem('prime_users',JSON.stringify(users));
+    localStorage.setItem('prime_user',JSON.stringify({name,email}));
     msg.innerText='Account created! Logging you in...';
-    setTimeout(checkLogin, 600);
+    setTimeout(checkLogin,600);
   } else {
-    const users = JSON.parse(localStorage.getItem('prime_users')||'{}');
-    if(users[email] && users[email].pass===pass){
-      localStorage.setItem('prime_user', JSON.stringify({name:users[email].name, email}));
+    const users=JSON.parse(localStorage.getItem('prime_users')||'{}');
+    if(users[email]&&users[email].pass===pass){
+      localStorage.setItem('prime_user',JSON.stringify({name:users[email].name,email}));
       checkLogin();
-    } else {
-      // Allow first-time quick login if no account yet
-      if(!users[email]){ msg.innerText='No account found. Tap Sign Up first.'; }
-      else { msg.innerText='Wrong password. Try again.'; }
-    }
+    } else if(!users[email]){msg.innerText='No account found. Tap Sign Up first.';}
+    else{msg.innerText='Wrong password.';}
   }
 }
-function logout(){
-  localStorage.removeItem('prime_user');
-  checkLogin();
+function logout(){localStorage.removeItem('prime_user');checkLogin();}
+function showPreview(input){
+  const f=input.files[0]; if(!f) return;
+  const el=document.getElementById('photoPrev'); el.src=URL.createObjectURL(f); el.style.display='block';
 }
-
-// ===== APP =====
-let mode = 'motion';
-function setMode(m){
-  mode = m;
-  document.getElementById('tabMotion').classList.toggle('active', m==='motion');
-  document.getElementById('tabOutfit').classList.toggle('active', m==='outfit');
-  if(m==='motion'){
-    document.getElementById('label2').innerText = '2. Motion Video';
-    document.getElementById('prompt').value = 'Make him dance Azonto in Accra, keep his face exactly the same, energetic, street style';
-  } else {
-    document.getElementById('label2').innerText = '2. Outfit Photo';
-    document.getElementById('prompt').value = 'Keep his face exactly the same, wear this outfit, change background to Osu, Accra, cinematic';
-  }
+function setPrompt(t){
+  const p=document.getElementById('prompt');
+  if(t==='azonto') p.value='A young Ghanaian man in Accra dancing energetic Azonto, fast footwork, hand gestures, shoulder bounce, smiling, street style, crowd in background, cinematic, 9:16 vertical';
+  if(t==='osu') p.value='A young Ghanaian man walking confidently in Osu at night, neon lights, stylish outfit, cinematic, looking at camera, street vibes';
+  if(t==='studio') p.value='A young Ghanaian man in studio photoshoot, clean background, professional lighting, posing and smiling, slow movement, cinematic';
 }
-function setPrompt(type){
-  if(type==='azonto') document.getElementById('prompt').value='Make him dance Azonto in Accra, keep his face exactly the same, energetic, street style, crowd cheering';
-  if(type==='osu') document.getElementById('prompt').value='Keep his face exactly the same, walking in Osu at night, neon lights, cinematic, stylish';
-  if(type==='studio') document.getElementById('prompt').value='Keep his face exactly the same, studio photoshoot, clean background, professional lighting';
-}
-function showPreview(input, prevId){
-  const file = input.files[0];
-  if(!file) return;
-  if(file.type.startsWith('video')){
-    const el=document.getElementById('videoPrev'); el.src=URL.createObjectURL(file); el.style.display='block';
-    document.getElementById('videoPrevImg').style.display='none';
-  } else {
-    const el=document.getElementById('videoPrevImg'); el.src=URL.createObjectURL(file); el.style.display='block';
-    document.getElementById('videoPrev').style.display='none';
-  }
-}
-
-// ===== HISTORY =====
 function loadHistory(){
-  const h = JSON.parse(localStorage.getItem('prime_history')||'[]');
-  const box=document.getElementById('history');
-  if(!h.length){ box.innerHTML='No videos yet. Your generations will appear here.'; return; }
-  box.innerHTML = h.map(item=>`<div class="history-item">🕐 ${item.time}<br>📝 ${item.prompt.slice(0,80)}<br><a href="${item.url}" target="_blank" style="color:#a3ff00">▶️ Watch Video</a></div>`).join('');
-}
-function saveHistory(promptText, url){
   const h=JSON.parse(localStorage.getItem('prime_history')||'[]');
-  h.unshift({time:new Date().toLocaleString(), prompt:promptText, url});
-  localStorage.setItem('prime_history', JSON.stringify(h.slice(0,10)));
+  const box=document.getElementById('history');
+  if(!h.length){box.innerHTML='No videos yet.';return;}
+  box.innerHTML=h.map(i=>`<div class="history-item">🕐 ${i.time}<br>📝 ${i.prompt.slice(0,80)}<br><a href="${i.url}" target="_blank" style="color:#a3ff00">▶️ Watch Video</a></div>`).join('');
+}
+function saveHistory(promptText,url){
+  const h=JSON.parse(localStorage.getItem('prime_history')||'[]');
+  h.unshift({time:new Date().toLocaleString(),prompt:promptText,url});
+  localStorage.setItem('prime_history',JSON.stringify(h.slice(0,10)));
   loadHistory();
 }
-function clearHistory(){ localStorage.removeItem('prime_history'); loadHistory(); }
-
-// ===== API KEY + VEO =====
-let API_KEY = localStorage.getItem('prime_veo_key') || '';
+function clearHistory(){localStorage.removeItem('prime_history');loadHistory();}
+let API_KEY=localStorage.getItem('prime_veo_key')||'';
 function changeKey(){
-  const k = prompt('Paste your Google AI Studio API Key (saved only on your phone):');
-  if(k){ API_KEY=k; localStorage.setItem('prime_veo_key', k); alert('Key saved!'); }
+  const k=prompt('Paste your Google AI Studio API Key (saved only on your phone):');
+  if(k){API_KEY=k;localStorage.setItem('prime_veo_key',k);alert('Key saved!');}
 }
-function clearKey(){ localStorage.removeItem('prime_veo_key'); API_KEY=''; alert('Key removed'); }
-
+function clearKey(){localStorage.removeItem('prime_veo_key');API_KEY='';alert('Key removed');}
 async function generate(){
   if(!API_KEY){
-    API_KEY = prompt('Paste your Google AI Studio API Key (saved only on your phone):');
+    API_KEY=prompt('Paste your Google AI Studio API Key (saved only on your phone):');
     if(!API_KEY) return;
-    localStorage.setItem('prime_veo_key', API_KEY);
+    localStorage.setItem('prime_veo_key',API_KEY);
   }
-  const promptText = document.getElementById('prompt').value || 'Make him dance Azonto in Accra, keep face same';
-  const status = document.getElementById('status');
-  const btn = document.getElementById('genBtn');
-  btn.disabled = true;
-  status.innerText = '⏳ PRIME + Veo 3.1 is generating... Keep this tab open, 1-2 mins';
-  try {
-    const start = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/veo-3.1-generate-preview:predictLongRunning?key=${API_KEY}`, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ instances:[{prompt:promptText}], parameters:{aspectRatio:"9:16", sampleCount:1} })
+  const promptText=document.getElementById('prompt').value||'Dancing Azonto in Accra';
+  const aspect=document.getElementById('aspect').value||'9:16';
+  const status=document.getElementById('status');
+  const btn=document.getElementById('genBtn');
+  btn.disabled=true;
+  status.innerText='⏳ Veo 3.1 is generating from your photo + prompt... Keep tab open, 1-2 mins';
+  try{
+    const start=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/veo-3.1-generate-preview:predictLongRunning?key=${API_KEY}`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({instances:[{prompt:promptText}],parameters:{aspectRatio:aspect,sampleCount:1}})
     });
-    const startData = await start.json();
+    const startData=await start.json();
     if(!startData.name) throw new Error(JSON.stringify(startData).slice(0,300));
-    let opName = startData.name;
+    let opName=startData.name;
     for(let i=0;i<20;i++){
       await new Promise(r=>setTimeout(r,10000));
-      status.innerText = `⏳ Veo is rendering... ${(i+1)*10}s - Don't close Safari`;
-      const poll = await fetch(`https://generativelanguage.googleapis.com/v1beta/${opName}?key=${API_KEY}`);
-      const pollData = await poll.json();
+      status.innerText=`⏳ Veo is rendering... ${(i+1)*10}s - Don't close Safari`;
+      const poll=await fetch(`https://generativelanguage.googleapis.com/v1beta/${opName}?key=${API_KEY}`);
+      const pollData=await poll.json();
       if(pollData.done){
-        const videoUri = pollData.response?.generateVideoResponse?.generatedSamples?.[0]?.video?.uri;
+        const videoUri=pollData.response?.generateVideoResponse?.generatedSamples?.[0]?.video?.uri;
         if(videoUri){
-          const watchUrl = videoUri + `&key=${API_KEY}`;
-          status.innerHTML = `✅ DONE!<br><br><a href="${watchUrl}" target="_blank">▶️ Watch Your PRIME Video</a><br><br>Tap to open, then Share > Save to Files.`;
-          saveHistory(promptText, watchUrl);
-        } else { status.innerText='Done but no video returned. Try again.'; }
-        btn.disabled=false; return;
+          const watchUrl=videoUri+`&key=${API_KEY}`;
+          status.innerHTML=`✅ DONE!<br><br><a href="${watchUrl}" target="_blank">▶️ Watch Your PRIME Video</a><br><br>Tap to open, then Share > Save to Files.`;
+          saveHistory(promptText,watchUrl);
+        } else {status.innerText='Done but no video returned. Try again.';}
+        btn.disabled=false;return;
       }
     }
-    status.innerText='Still rendering... Wait 1 min and tap Generate again'; btn.disabled=false;
-  } catch(e){ status.innerText='Error: '+e.message; btn.disabled=false; }
+    status.innerText='Still rendering... Wait 1 min and tap Generate again';btn.disabled=false;
+  }catch(e){status.innerText='Error: '+e.message;btn.disabled=false;}
 }
-
 checkLogin();
 </script>
 </body>
