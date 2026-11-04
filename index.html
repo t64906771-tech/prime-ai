@@ -28,9 +28,38 @@ textarea,input,select{width:100%;background:#000;color:#fff;border:1px solid #33
 .face{width:44px;height:44px;background:#333;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px}
 </style>
 </head>
-<body>
+<body><div id="p-auth" class="page">
+<div class="box"><h2>👋 Welcome to PRIME AI</h2>
+<input id="regName" placeholder="Full Name" style="width:90%;padding:12px;margin:5px">
+<input id="regPhone" placeholder="Phone e.g 0546439879" style="width:90%;padding:12px;margin:5px">
+<input id="regPass" type="password" placeholder="Create Password" style="width:90%;padding:12px;margin:5px">
+<button onclick="doRegister()" style="width:95%;padding:12px;background:#25D366;color:white;border:none;border-radius:10px;margin:5px">REGISTER</button>
+<hr>
+<input id="logPhone" placeholder="Phone" style="width:90%;padding:12px;margin:5px">
+<input id="logPass" type="password" placeholder="Password" style="width:90%;padding:12px;margin:5px">
+<button onclick="doLogin()" style="width:95%;padding:12px;background:black;color:white;border:none;border-radius:10px;margin:5px">LOGIN</button>
+<p id="authMsg"></p>
+</div></div>
 <div class="top"><div class="logo">PRIME<span> AI</span></div><div class="badge">PRO • GHANA</div></div>
-
+<script>
+function doRegister(){
+var n=document.getElementById('regName').value;
+var p=document.getElementById('regPhone').value;
+var pw=document.getElementById('regPass').value;
+if(!n||!p||!pw){document.getElementById('authMsg').innerText='Fill all fields';return;}
+localStorage.setItem('prime_user_'+p, JSON.stringify({name:n,phone:p,pass:pw}));
+localStorage.setItem('prime_logged',p);
+document.getElementById('authMsg').innerText='Registered! Welcome '+n;
+show('home');
+}
+function doLogin(){
+var p=document.getElementById('logPhone').value;
+var pw=document.getElementById('logPass').value;
+var u=JSON.parse(localStorage.getItem('prime_user_'+p)||'null');
+if(u && u.pass===pw){localStorage.setItem('prime_logged',p);show('home');}
+else{document.getElementById('authMsg').innerText='Wrong phone or password';}
+}
+</script>
 <div id="p-home" class="page active">
 <h1>Create Cinematic<br>AI Video.</h1><p class="sub">Vidu Q2 • Higgsfield Camera • Character DNA</p>
 <div class="box"><label style="font-size:11px;color:#BDBDBD">DESCRIBE YOUR SCENE</label><textarea>A beautiful Ghanaian lady in Makola Market, golden hour, wearing kente, cinematic</textarea>
