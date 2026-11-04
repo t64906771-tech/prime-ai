@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PRIME AI - Veo</title>
+<title>PRIME AI - Omni</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
 body{background:#000;color:#fff;padding:16px;padding-bottom:60px}
@@ -46,7 +46,7 @@ label{font-size:13px;color:#aaa;display:block;margin:12px 0 6px}
 <!-- LOGIN -->
 <div id="authScreen" class="auth">
   <h2>PRIME <span>AI</span></h2>
-  <p>Veo Image-to-Video • Built in Accra</p>
+  <p>Gemini Omni Video • Built in Accra</p>
   <div class="card">
     <h3 id="authTitle">Login to PRIME AI</h3>
     <label>Name (for Signup)</label>
@@ -65,7 +65,7 @@ label{font-size:13px;color:#aaa;display:block;margin:12px 0 6px}
 <div id="appScreen" class="hidden">
   <div class="header">
     <h1>PRIME <span>AI</span></h1>
-    <p>Veo 3.1 • Image to Video • Cinematic</p>
+    <p>Gemini Omni 1.1 Flash • Image to Video • Cinematic</p>
     <div class="badge">Status: <b>Ready</b> • prime-ai-mu.vercel.app</div>
   </div>
 
@@ -75,10 +75,10 @@ label{font-size:13px;color:#aaa;display:block;margin:12px 0 6px}
   </div>
 
   <div class="note">
-    <b>How this works (honest):</b><br>
+    <b>How this works:</b><br>
     1. Upload your photo = First frame<br>
     2. Write what you want him to do<br>
-    3. Veo <b>invents</b> the movement from your prompt. It does NOT copy a dance video. For best Azonto, describe the moves in detail.
+    3. Gemini Omni <b>invents</b> the movement from your prompt. It does NOT copy a dance video. Describe moves in detail for best Azonto.
   </div>
 
   <div class="card">
@@ -101,16 +101,16 @@ label{font-size:13px;color:#aaa;display:block;margin:12px 0 6px}
       <option value="16:9">16:9 - Landscape (YouTube)</option>
       <option value="1:1">1:1 - Square</option>
     </select>
-    <label>Duration Hint (Veo decides, but prompt helps)</label>
+    <label>Duration Hint</label>
     <select id="duration">
       <option value="8s">~8 seconds - Quick clip</option>
       <option value="long">Longer - Keep dancing</option>
     </select>
   </div>
 
-  <button class="gen" id="genBtn" onclick="generate()">🚀 GENERATE WITH VEO</button>
+  <button class="gen" id="genBtn" onclick="generate()">🚀 GENERATE WITH OMNI</button>
 
-  <div id="status">Ready. Upload photo, write prompt, tap GENERATE.<br>Keep Safari open 1-2 mins while Veo renders.</div>
+  <div id="status">Ready. Upload photo, write prompt, tap GENERATE.<br>Keep Safari open 1-2 mins while Omni renders.</div>
 
   <div class="card" style="margin-top:12px">
     <h3>📜 Your History</h3>
@@ -125,7 +125,7 @@ label{font-size:13px;color:#aaa;display:block;margin:12px 0 6px}
     <button class="gen2" onclick="clearKey()">Remove API Key</button>
   </div>
 
-  <div class="small">PRIME AI • Veo 3.1 via Google AI Studio<br>Tip: Detailed prompts = better dance. E.g. "fast Azonto footwork, arms swinging, shoulder bounce"</div>
+  <div class="small">PRIME AI • Gemini Omni 1.1 Flash via Google AI Studio<br>Tip: Detailed prompts = better dance. E.g. "fast Azonto footwork, arms swinging, shoulder bounce"</div>
 </div>
 
 <script>
@@ -214,27 +214,28 @@ async function generate(){
   const status=document.getElementById('status');
   const btn=document.getElementById('genBtn');
   btn.disabled=true;
-  status.innerText='⏳ Veo 3.1 is generating from your photo + prompt... Keep tab open, 1-2 mins';
+  status.innerText='⏳ PRIME + Gemini Omni is generating... Keep tab open, 1-2 mins';
   try{
-    const start=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/veo-3.1-generate-preview:predictLongRunning?key=${API_KEY}`,{
+    const start=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-omni-1.1-flash:predictLongRunning?key=${API_KEY}`,{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({instances:[{prompt:promptText}],parameters:{aspectRatio:aspect,sampleCount:1}})
     });
     const startData=await start.json();
+    if(startData.error) throw new Error(startData.error.message || JSON.stringify(startData).slice(0,300));
     if(!startData.name) throw new Error(JSON.stringify(startData).slice(0,300));
     let opName=startData.name;
     for(let i=0;i<20;i++){
       await new Promise(r=>setTimeout(r,10000));
-      status.innerText=`⏳ Veo is rendering... ${(i+1)*10}s - Don't close Safari`;
+      status.innerText=`⏳ Omni is rendering... ${(i+1)*10}s - Don't close Safari`;
       const poll=await fetch(`https://generativelanguage.googleapis.com/v1beta/${opName}?key=${API_KEY}`);
       const pollData=await poll.json();
       if(pollData.done){
-        const videoUri=pollData.response?.generateVideoResponse?.generatedSamples?.[0]?.video?.uri;
+        const videoUri=pollData.response?.generateVideoResponse?.generatedSamples?.[0]?.video?.uri || pollData.response?.generatedVideos?.[0]?.video?.uri;
         if(videoUri){
           const watchUrl=videoUri+`&key=${API_KEY}`;
           status.innerHTML=`✅ DONE!<br><br><a href="${watchUrl}" target="_blank">▶️ Watch Your PRIME Video</a><br><br>Tap to open, then Share > Save to Files.`;
           saveHistory(promptText,watchUrl);
-        } else {status.innerText='Done but no video returned. Try again.';}
+        } else {status.innerText='Done but no video returned. Try again. Response: '+JSON.stringify(pollData).slice(0,200);}
         btn.disabled=false;return;
       }
     }
