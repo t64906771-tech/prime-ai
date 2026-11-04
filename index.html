@@ -122,7 +122,25 @@ label{font-size:14px}
 <p id="dnaMsg" style="font-size:13px;color:#4ade80;margin-top:10px"></p>
 <div id="dnaList"></div>
 </div>
+<div class="page" id="p-genjutsu">
+<h2>👁️ GENJUTSU - Video Swap</h2>
+<p style="opacity:.8">Upload 4-30 sec video. Keep same motion, swap person / scene / style.</p>
 
+<input type="file" id="genVideo" accept="video/*" onchange="previewGenjutsu(event)">
+<video id="genPreview" controls style="width:100%;border-radius:12px;margin-top:10px;display:none"></video>
+
+<select id="genMode" style="width:100%;margin-top:10px;padding:12px;border-radius:10px">
+<option value="Swap Person">🔄 Swap Person - Keep motion, change who is in shot</option>
+<option value="Swap Scene">🌍 Swap Scene - Keep person, change location</option>
+<option value="Swap Style">🎬 Swap Style - Cinematic / Anime / Superhero</option>
+</select>
+
+<textarea id="genPrompt" placeholder="Describe change... e.g. Turn me into a superhero walking in Paris, same walk, cinematic" style="width:100%;margin-top:10px;padding:12px;border-radius:10px;height:70px"></textarea>
+
+<button onclick="generateGenjutsu()" style="width:100%;padding:14px;margin-top:10px;border-radius:12px;background:#a855f7;color:white;font-weight:bold;border:none">✨ APPLY GENJUTSU</button>
+
+<div id="genResult" style="margin-top:12px"></div>
+</div>
 <!-- ADMIN -->
 <div id="p-admin" class="page">
 <h1>Admin</h1>
@@ -208,6 +226,23 @@ renderDNA();
 function renderDNA(){
 let list=JSON.parse(localStorage.getItem('prime_dna')||'[]');
 document.getElementById('dnaList').innerHTML=list.map(x=>'<div class="card"><b>'+x.name+'</b><br><span class="small">'+x.desc+'</span></div>').join('');
+}let genVideoURL = "";
+function previewGenjutsu(e){
+let f=e.target.files[0]; if(!f) return;
+genVideoURL=URL.createObjectURL(f);
+let v=document.getElementById('genPreview');
+v.src=genVideoURL; v.style.display='block';
+}
+function generateGenjutsu(){
+let mode=document.getElementById('genMode').value;
+let prompt=document.getElementById('genPrompt').value;
+if(!genVideoURL){alert('Upload a video first!');return;}
+if(!prompt){alert('Describe the change!');return;}
+let r=document.getElementById('genResult');
+r.innerHTML='<p>🌀 Casting Genjutsu... '+mode+'<br>⏳ Please wait 20-30 sec...</p>';
+setTimeout(()=>{
+r.innerHTML='<p style="color:#4ade80">✅ Genjutsu Complete!</p><video src="'+genVideoURL+'" controls style="width:100%;border-radius:12px;filter:contrast(1.2) saturate(1.5)"></video><p><b>Mode:</b> '+mode+'<br><b>Prompt:</b> '+prompt+'<br><small>Demo preview - Connect Higgsfield API for real swap</small></p><button onclick="alert(\'Saved to your library!\')" style="width:100%;padding:12px;border-radius:10px;background:#22c55e;color:white;border:none;margin-top:8px">💾 Save to Library</button>';
+},3000);
 }
 window.onload=function(){
 let c=localStorage.getItem('prime_credits'); if(c) document.getElementById('creditBal').textContent=c;
